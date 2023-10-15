@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>디지털아카데미 7조 - chatbot</title>
+    {% block scripts %}
+        <script>
+        function chatTrain() {
+            alert('Training...');
+        }
+        </script>
+
+    {% endblock %}
+    {% block styles %}
+        <style>
+            .chat-header {
+            position:fixed;
+            left:0;
+            top:0;
+            width:100%;
+            padding:10px 0;
+            background-color:silver;
+            text-aLign:center;
+            }
+            .chat-footer {
+            position:fixed;
+            left:0;
+            bottom:0;
+            width:100%;
+            padding:10px 0;
+            background-color: silver;
+            text-aLign:center;
+            }
+        </style>
+    {% endblock %}
+</head>
+<body style="height:100%;background-color: white;">
+<div class="chat-header"><a href="/chathome/">행정 민원 질의응답 챗봇</a></div>
+    <div style="height: 450px;margin-top: 50px;background-color: lightskyblue">chat body</div>
+    <div class="chat-footer">채팅을 입력하시오</div>
+</body>
+</html>
