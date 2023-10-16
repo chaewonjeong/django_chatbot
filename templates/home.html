@@ -5,9 +5,45 @@
     <title>디지털아카데미 7조 - chatbot</title>
     {% block scripts %}
         <script>
+
         function chatTrain() {
             alert('Training...');
         }
+        function sendAsk() {
+            ctext = document.getElementById("chattext").value;
+            if(ctext == ""){
+                 document.getElementById("chattext").value;
+                 return false;
+            }
+
+            addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 10px;'>" + ctext + "</span></div>"
+            document.getElementById("chatbox").innerHTML += addtext;
+            {#document.getElementById("chattext").value = "";#}
+
+            bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>하이</span></div>"
+            document.getElementById("chatbox").innerHTML += bottext;
+
+            var mydiv = document.getElementById("chatbox");
+            mydiv.scrollTop = document.getElementById("chatbox").scrollHeight;
+
+        }
+        function adjustChatboxHeight() {
+            var marginValue = 20;
+            var windowHeight = window.innerHeight;
+            var headerHeight = document.getElementById("chattitle").offsetHeight;
+            var footerHeight = document.getElementById("userchat").offsetHeight;
+            var chatboxHeight = windowHeight - headerHeight - footerHeight - (2 * marginValue);
+            document.getElementById("chatbox").style.height = chatboxHeight + "px";
+        }
+
+        window.addEventListener("resize", adjustChatboxHeight);
+        window.addEventListener("load", adjustChatboxHeight);
+
+        // Initial call to set the chatbox height
+        adjustChatboxHeight();
+
+
+
         </script>
 
     {% endblock %}
@@ -30,13 +66,47 @@
             padding:10px 0;
             background-color: silver;
             text-aLign:center;
+            color: white;
+            }
+
+            a:link, a:visited {
+              color: black;
+                text-decoration: none;
             }
         </style>
     {% endblock %}
 </head>
 <body style="height:100%;background-color: white;">
-<div class="chat-header"><a href="/chathome/">행정 민원 질의응답 챗봇</a></div>
-    <div style="height: 450px;margin-top: 50px;background-color: lightskyblue">chat body</div>
-    <div class="chat-footer">채팅을 입력하시오</div>
+    <div id="chattitle" class="chat-header">
+        <table width="100%">
+            <tr>
+                <td width="25%" align="left">
+                    <a href="/chathome/">채팅 다시하기</a>
+                </td>
+                <td width="50%" align="center">
+                    <a href="/chathome/">행정 민원 질의응답 챗봇</a>
+                </td>
+                <td width="25%" align="right">
+                    <span onclick="chatTrain()" style="cursor:pointer;">train</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id = "chatbox" style="margin-top:65px;margin-bottom:23px; background-color: lightskyblue;overflow-y:scroll;overflow-x:hidden;max-height:100vh;border-radius: 10px;">
+
+    </div>
+    <div id="userchat" class="chat-footer" >
+        <table width="100%">
+            <tr>
+                <td width="85%" align="left">
+                    <input id="chattext" type="text" style="padding:10px 0;width: 100%;border:solid 0px;">
+                </td>
+                <td width="15%">
+                    <button style="padding: 10px; width: 90%;" onclick="sendAsk()">보내기</button>
+                </td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
