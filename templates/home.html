@@ -18,7 +18,7 @@
 
             addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 10px;'>" + ctext + "</span></div>"
             document.getElementById("chatbox").innerHTML += addtext;
-            {#document.getElementById("chattext").value = "";#}
+            document.getElementById("chattext").value = "";
 
             bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>하이</span></div>"
             document.getElementById("chatbox").innerHTML += bottext;
@@ -49,58 +49,74 @@
     {% endblock %}
     {% block styles %}
         <style>
-            .chat-header {
-            position:fixed;
-            left:0;
-            top:0;
-            width:100%;
-            padding:10px 0;
-            background-color:silver;
-            text-aLign:center;
+            .chat-container {
+                display: grid;
+                grid-template-rows: auto 1fr auto; /* 위 / 채팅 본문 / 아래 간격 */
+                min-height: 100%; /* 최소 화면 높이 유지 */
             }
+
+            .chat-header {
+                background-color: silver;
+                padding: 20px 0;
+                text-align: center;
+                border-radius: 5px;
+            }
+
+            .chat-box {
+                background-color: lightskyblue;
+                overflow-y: scroll;
+                overflow-x: hidden;
+                max-height: calc(100vh - 120px); /* 헤더와 푸터의 높이를 뺀 나머지 높이 */
+                border-radius: 5px;
+                margin: 10px; /* 위아래 간격을 조절 */
+                margin-right: 2px;
+                margin-left: 2px;
+            }
+
             .chat-footer {
-            position:fixed;
-            left:0;
-            bottom:0;
-            width:100%;
-            padding:10px 0;
-            background-color: silver;
-            text-aLign:center;
-            color: white;
+                background-color: silver;
+                padding: 15px 0;
+                padding-left: 10px;
+                border-radius: 5px;
+                text-align: center;
+                color: white;
             }
 
             a:link, a:visited {
-              color: black;
+                color: black;
                 text-decoration: none;
             }
         </style>
     {% endblock %}
 </head>
 <body style="height:100%;background-color: white;">
+<div class="chat-container">
+
     <div id="chattitle" class="chat-header">
         <table width="100%">
             <tr>
                 <td width="25%" align="left">
-                    <a href="/chathome/">채팅 다시하기</a>
+                    <a href="/chathome/" style="padding: 10px">채팅 다시하기</a>
                 </td>
                 <td width="50%" align="center">
                     <a href="/chathome/">행정 민원 질의응답 챗봇</a>
                 </td>
                 <td width="25%" align="right">
-                    <span onclick="chatTrain()" style="cursor:pointer;">train</span>
+                    <span onclick="chatTrain()" style="cursor:pointer; padding: 10px">train</span>
                 </td>
             </tr>
         </table>
     </div>
 
-    <div id = "chatbox" style="margin-top:65px;margin-bottom:23px; background-color: lightskyblue;overflow-y:scroll;overflow-x:hidden;max-height:100vh;border-radius: 10px;">
-
+    <div id = "chatbox" class="chat-box">
+        {#채팅시작#}
     </div>
+
     <div id="userchat" class="chat-footer" >
         <table width="100%">
             <tr>
                 <td width="85%" align="left">
-                    <input id="chattext" type="text" style="padding:10px 0;width: 100%;border:solid 0px;">
+                    <input id="chattext" type="text" style="padding:30px 0;width: 100%;border:solid 0px;border-radius: 10px;">
                 </td>
                 <td width="15%">
                     <button style="padding: 10px; width: 90%;" onclick="sendAsk()">보내기</button>
@@ -108,5 +124,6 @@
             </tr>
         </table>
     </div>
+</div>
 </body>
 </html>
