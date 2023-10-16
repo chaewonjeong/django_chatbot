@@ -1,32 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>디지털아카데미 7조 - chatbot</title>
     {% block scripts %}
-        <script>
-
-        function chatTrain() {
-            alert('Training...');
-        }
-        function sendAsk() {
-            ctext = document.getElementById("chattext").value;
-            if(ctext == ""){
-                 document.getElementById("chattext").value;
-                 return false;
-            }
-
-            addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 10px;'>" + ctext + "</span></div>"
-            document.getElementById("chatbox").innerHTML += addtext;
-            document.getElementById("chattext").value = "";
-
-            bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>하이</span></div>"
-            document.getElementById("chatbox").innerHTML += bottext;
-
-            var mydiv = document.getElementById("chatbox");
-            mydiv.scrollTop = document.getElementById("chatbox").scrollHeight;
-
-        }
+    <script>
         function adjustChatboxHeight() {
             var marginValue = 20;
             var windowHeight = window.innerHeight;
@@ -42,88 +21,178 @@
         // Initial call to set the chatbox height
         adjustChatboxHeight();
 
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var csrftoken = getCookie('csrftoken');
+
+        var xhr;
+
+        function chatTrain() {
+            alert('개발 예정...');
+        }
+        function sendAsk() {
+            // 스크롤 하단 고정
+            var mydiv = document.getElementById("chatbox");
+            mydiv.scrollTop = document.getElementById("chatbox").scrollHeight;
+
+            ctext = document.getElementById("chattext").value;
+            if (ctext === "") {
+                document.getElementById("chattext").value;
+                return false;
+            }
+
+            addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 10px;'>" + ctext + "</span></div>"
+            document.getElementById("chatbox").innerHTML += addtext;
+            document.getElementById("chattext").value = "";
+
+            bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>격려금 또는 무이자융자 지원</span></div>"
+            document.getElementById("chatbox").innerHTML += bottext;
+
+            var strurl = "chatanswer?chattext=" + chattext;
+            //alert(strurl);
+            //return false;
+
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4) {
+                    var data = xhr.responseText;
+
+                    var obj = JSON.parse(data);
+
+                    if(obj.flag === "0"){
+
+                        bottext = "<div style='margin:15px 0;text-align:left;'><span style='padding:3px 10px;background-color:#DDD;border-radius:3px;'>" + obj.anstext + "</span></div>";
+                        document.getElementById("chatbox").innerHTML += bottext;
+
+                        var objDiv = document.getElementById("chatbox");
+                        objDiv.scrollTop = objDiv.scrollHeight;
+
+                        document.getElementById("chattext").value = "";
+                        document.getElementById("chattext").focus();
+
+                    }
+                }
+            };
+            xhr.open("GET", strurl);
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.send(null);
+
+        }
 
 
-        </script>
+
+
+    </script>
 
     {% endblock %}
     {% block styles %}
-        <style>
-            .chat-container {
-                display: grid;
-                grid-template-rows: auto 1fr auto; /* 위 / 채팅 본문 / 아래 간격 */
-                min-height: 100%; /* 최소 화면 높이 유지 */
-            }
+    <style>
+        .chat-container {
+            display: grid;
+            grid-template-rows: auto auto auto;
+            /* 위 / 채팅 본문 / 아래 간격 */
+            min-height: 100%;
+            /* 최소 화면 높이 유지 */
+        }
 
-            .chat-header {
-                background-color: silver;
-                padding: 20px 0;
-                text-align: center;
-                border-radius: 5px;
-            }
+        .chat-header {
+            background-color: silver;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+        }
 
-            .chat-box {
-                background-color: lightskyblue;
-                overflow-y: scroll;
-                overflow-x: hidden;
-                max-height: calc(100vh - 120px); /* 헤더와 푸터의 높이를 뺀 나머지 높이 */
-                border-radius: 5px;
-                margin: 10px; /* 위아래 간격을 조절 */
-                margin-right: 2px;
-                margin-left: 2px;
-            }
+        .chat-box {
+            background-color: lightskyblue;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            max-height: calc(100vh - 120px);
+            /* 헤더와 푸터의 높이를 뺀 나머지 높이 */
+            border-radius: 5px;
+            margin: 10px;
+            /* 위아래 간격을 조절 */
+            margin-right: 2px;
+            margin-left: 2px;
+        }
 
-            .chat-footer {
-                background-color: silver;
-                padding: 15px 0;
-                padding-left: 10px;
-                border-radius: 5px;
-                text-align: center;
-                color: white;
-            }
+        .chat-footer {
+            background-color: silver;
+            padding: 15px 0;
+            padding-left: 10px;
+            border-radius: 5px;
+            text-align: center;
+            color: white;
+        }
 
-            a:link, a:visited {
-                color: black;
-                text-decoration: none;
-            }
-        </style>
+        a:link,
+        a:visited {
+            color: black;
+            text-decoration: none;
+        }
+    </style>
     {% endblock %}
 </head>
+
 <body style="height:100%;background-color: white;">
-<div class="chat-container">
+    <div class="chat-container">
 
-    <div id="chattitle" class="chat-header">
-        <table width="100%">
-            <tr>
-                <td width="25%" align="left">
-                    <a href="/chathome/" style="padding: 10px">채팅 다시하기</a>
-                </td>
-                <td width="50%" align="center">
-                    <a href="/chathome/">행정 민원 질의응답 챗봇</a>
-                </td>
-                <td width="25%" align="right">
-                    <span onclick="chatTrain()" style="cursor:pointer; padding: 10px">train</span>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <div id="chattitle" class="chat-header">
+            <table width="100%">
+                <tr>
+                    <td width="25%" align="left">
+                        <a href="/chathome/" style="padding: 10px">채팅 다시하기</a>
+                    </td>
+                    <td width="50%" align="center">
+                        <a href="/chathome/">행정 민원 질의응답 챗봇</a>
+                    </td>
+                    <td width="25%" align="right">
+                        <span onclick="chatTrain()" style="cursor:pointer; padding: 10px">질문 카테고리</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
 
-    <div id = "chatbox" class="chat-box">
-        {#채팅시작#}
-    </div>
+        <div id="chatbox" class="chat-box">
+            {#채팅시작#}
+        </div>
 
-    <div id="userchat" class="chat-footer" >
-        <table width="100%">
-            <tr>
-                <td width="85%" align="left">
-                    <input id="chattext" type="text" style="padding:30px 0;width: 100%;border:solid 0px;border-radius: 10px;">
-                </td>
-                <td width="15%">
-                    <button style="padding: 10px; width: 90%;" onclick="sendAsk()">보내기</button>
-                </td>
-            </tr>
-        </table>
+        <div id="userchat" class="chat-footer">
+            <table width="100%">
+                <tr>
+                    <td width="85%" align="left">
+                        <input id="chattext" type="text" style="padding:30px 0;width: 100%;border:solid 0px;border-radius: 5px;">
+                    </td>
+                    <td width="15%">
+                        <button id="sendbtn" style="padding: 10px; width: 90%;" onclick="sendAsk()">보내기</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
 </body>
+
 </html>
+
+<script>
+let input = document.getElementById("chattext");
+
+input.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    document.getElementById("sendbtn").click();
+  }
+});
+</script>
