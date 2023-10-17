@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>디지털아카데미 7조 - chatbot</title>
+    <title>행정 민원 Chatbot</title>
     {% block scripts %}
     <script>
         function adjustChatboxHeight() {
@@ -55,36 +55,35 @@
                 return false;
             }
 
-            addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 10px;'>" + ctext + "</span></div>"
+            addtext = "<div style='margin:20px 0;text-align:right'><span style='background-color: silver;padding:7px; margin: 7px; border-radius: 5px;'>" + ctext + "</span></div>"
             document.getElementById("chatbox").innerHTML += addtext;
             document.getElementById("chattext").value = "";
 
-            bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>격려금 또는 무이자융자 지원</span></div>"
-            document.getElementById("chatbox").innerHTML += bottext;
+            {#bottext = "<div style='margin:20px 0;text-align:left'><span style='background-color: white;padding:7px; margin: 7px; border-radius: 10px;'>격려금 또는 무이자융자 지원</span></div>"#}
+            {#document.getElementById("chatbox").innerHTML += bottext;#}
 
-            var strurl = "chatanswer?chattext=" + chattext;
+            var strurl = "chatanswer?chattext=" + ctext;
             //alert(strurl);
             //return false;
 
             xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4) {
-                    var data = xhr.responseText;
+                    let data = xhr.responseText;
 
-                    var obj = JSON.parse(data);
+                    let obj = JSON.parse(data);
+                    // alert(obj.anstext)
 
-                    if(obj.flag === "0"){
+                    bottext = "<div style='margin:20px 0;text-align:left;'><span style='padding:7px;background-color:white; margin:7px; border-radius:5px;'>" + obj.anstext + "</span></div>";
+                    document.getElementById("chatbox").innerHTML += bottext;
 
-                        bottext = "<div style='margin:15px 0;text-align:left;'><span style='padding:3px 10px;background-color:#DDD;border-radius:3px;'>" + obj.anstext + "</span></div>";
-                        document.getElementById("chatbox").innerHTML += bottext;
+                    var objDiv = document.getElementById("chatbox");
+                    objDiv.scrollTop = objDiv.scrollHeight;
 
-                        var objDiv = document.getElementById("chatbox");
-                        objDiv.scrollTop = objDiv.scrollHeight;
+                    document.getElementById("chattext").value = "";
+                    document.getElementById("chattext").focus();
 
-                        document.getElementById("chattext").value = "";
-                        document.getElementById("chattext").focus();
 
-                    }
                 }
             };
             xhr.open("GET", strurl);
@@ -92,9 +91,6 @@
             xhr.send(null);
 
         }
-
-
-
 
     </script>
 
@@ -160,7 +156,7 @@
                         <a href="/chathome/">행정 민원 질의응답 챗봇</a>
                     </td>
                     <td width="25%" align="right">
-                        <span onclick="chatTrain()" style="cursor:pointer; padding: 10px">질문 카테고리</span>
+                        <span onclick="chatTrain()" style="cursor:pointer; padding: 10px">모델 초기화</span>
                     </td>
                 </tr>
             </table>
